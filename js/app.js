@@ -96,22 +96,28 @@ function itemClick(event){
 
     else {
         
+
         let list = document.getElementById('results');
-
-        for (let i = 0; i < items.length; i++) {
-            let listItem = document.createElement('li');
-            list.appendChild(listItem);
-            listItem.textContent = `${items[i].name} had ${items[i].votes} votes, and was seen ${items[i].shown} times.`
-            
-        }
-
+        let resultButton = document.createElement('button');
+        list.appendChild(resultButton);
+        resultButton.textContent ='Results';
+        resultButton.addEventListener('click', resultClick);
         leftItemElement.removeEventListener('click',itemClick);
         middleItemElement.removeEventListener('click',itemClick);
         rightItemElement.removeEventListener('click',itemClick);
 
     }
-
-
 }
 
+function resultClick(){
+    let list = document.getElementById('results');
+    list.textContent=' ';
+
+    for (let i = 0; i < items.length; i++) {
+        let listItem = document.createElement('li');
+        list.appendChild(listItem);
+        listItem.textContent = `${items[i].name} had ${items[i].votes} votes, and was seen ${items[i].shown} times.`
+        
+    }
+}
  
