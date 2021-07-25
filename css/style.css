@@ -1,0 +1,42 @@
+body{
+    text-align: center;
+}
+h1{
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 2.5rem;
+    margin: 50px 0 100px;
+}
+h2{
+    font-family: 'Archivo Narrow', sans-serif;
+    font-size: 30px;
+    color: white;
+    margin: 50px 10px;
+    padding-top: 7px;
+    
+}
+.title{
+    background-color: teal;
+    width: 250px;
+    height: 60px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.item-img{
+    width: 400px;
+    height: 450px;
+    margin: 20px;
+}
+#results {
+    margin: 50px;
+}
+li{
+    background-color: rgb(137 219 219 / 22%);
+    margin: 15px auto;
+    padding: 5px;
+    list-style: none;
+    width: 600px;
+    height: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
