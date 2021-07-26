@@ -4,10 +4,12 @@ let itemsDivElement = document.getElementById('items');
 let leftItemElement = document.getElementById('left-item');
 let middleItemElement = document.getElementById('middle-item');
 let rightItemElement = document.getElementById('right-item');
-
 let attemptsNumber = 25;
 let attemptsCounter = 0;
-let items = [];
+let randomArr =[];
+let nameArr = [];
+let shownArr = [];
+let votesArr =[];
 let leftItemIndex;
 let middleItemIndex;
 let rightItemIndex;
@@ -18,9 +20,9 @@ function Item(name, src){
     this.src = src;
     this.shown = 0;
     this.votes = 0;
-    items.push(this);
+    Item.itemsAll.push(this);
 }
-
+Item.itemsAll = [];
 
 new Item('Bag','img/bag.jpg');
 new Item('Banana','img/banana.jpg');
@@ -44,36 +46,51 @@ new Item('Wine-Glass','img/wine-glass.jpg');
 
 
 function randomIndex(){
-   return Math.floor(Math.random()*items.length);
+   return Math.floor(Math.random()*Item.itemsAll.length);
 }
 
-function renderItems(){
-
+function renderitems(){
+    
+    
     leftItemIndex = randomIndex();
     middleItemIndex = randomIndex();
     rightItemIndex = randomIndex();
 
-    while ( (leftItemIndex == middleItemIndex) || (leftItemIndex == rightItemIndex) || (rightItemIndex == middleItemIndex)){
-        middleItemIndex = randomIndex();
-        rightItemIndex = randomIndex();
+    console.log('Previous Array',randomArr);
+
+    if (randomArr.length == 0){
+        while ((leftItemIndex == middleItemIndex) || (leftItemIndex == rightItemIndex) || (rightItemIndex == middleItemIndex)){
+            middleItemIndex = randomIndex();
+            rightItemIndex = randomIndex();
+        }
     }
+    
+    for (let i = 0; i < randomArr.length; i++) {
+        while ((leftItemIndex==randomArr[i])||(middleItemIndex==randomArr[i])||(rightItemIndex==randomArr[i]) || (leftItemIndex == middleItemIndex) || (leftItemIndex == rightItemIndex) || (rightItemIndex == middleItemIndex)){
+            leftItemIndex = randomIndex();
+            middleItemIndex = randomIndex();
+            rightItemIndex = randomIndex();
+        }
+    }
+    console.log('new arr ',leftItemIndex,middleItemIndex,rightItemIndex);
+   
+    leftItemElement.src = Item.itemsAll[leftItemIndex].src;
+    middleItemElement.src = Item.itemsAll[middleItemIndex].src;
+    rightItemElement.src = Item.itemsAll[rightItemIndex].src;
+    Item.itemsAll[leftItemIndex].shown++;
+    Item.itemsAll[middleItemIndex].shown++;
+    Item.itemsAll[rightItemIndex].shown++;
 
-    leftItemElement.src = items[leftItemIndex].src;
-    middleItemElement.src = items[middleItemIndex].src;
-    rightItemElement.src = items[rightItemIndex].src;
-    items[leftItemIndex].shown++;
-    items[middleItemIndex].shown++;
-    items[rightItemIndex].shown++;
-
-    //console.log (leftItemElement,rightItemElement,middleItemElement);
+    randomArr[0]= leftItemIndex;
+    randomArr[1]= middleItemIndex;
+    randomArr[2]= rightItemIndex;
 
 }
 
-renderItems();
+renderitems();
 
 itemsDivElement.addEventListener('click',itemClick);
-// middleItemElement.addEventListener('click',itemClick);
-// rightItemElement.addEventListener('click',itemClick);
+
 
 
 function itemClick(event){
@@ -83,16 +100,16 @@ function itemClick(event){
     if (attemptsCounter < attemptsNumber){
 
         if ( event.target.id ==='left-item'){
-            items[leftItemIndex].votes++;
-            renderItems();
+            Item.itemsAll[leftItemIndex].votes++;
+            renderitems();
         }
         else if ( event.target.id ==='middle-item'){
-            items[middleItemIndex].votes++;
-            renderItems();
+            Item.itemsAll[middleItemIndex].votes++;
+            renderitems();
         }
         else if ( event.target.id ==='right-item'){
-            items[rightItemIndex].votes++;
-            renderItems();
+            Item.itemsAll[rightItemIndex].votes++;
+            renderitems();
         }
         else {
             alert('Please choose one of the three images.');
@@ -101,29 +118,109 @@ function itemClick(event){
     }
 
     else {
-        
 
-        let list = document.getElementById('results');
+        // let list = document.getElementById('results');
         let resultButton = document.createElement('button');
-        list.appendChild(resultButton);
+        itemsDivElement.appendChild(resultButton);
         resultButton.textContent ='Results';
         resultButton.addEventListener('click', resultClick);
         itemsDivElement.removeEventListener('click',itemClick);
-        // middleItemElement.removeEventListener('click',itemClick);
-        // rightItemElement.removeEventListener('click',itemClick);
 
+        
+
+for (let i = 0; i < Item.itemsAll.length; i++) {
+    nameArr.push(Item.itemsAll[i].name);
+    shownArr.push(Item.itemsAll[i].votes);
+    votesArr.push(Item.itemsAll[i].shown);
+}
+console.log(nameArr, shownArr, votesArr);
     }
 }
 
 function resultClick(){
-    let list = document.getElementById('results');
-    list.textContent=' ';
-
-    for (let i = 0; i < items.length; i++) {
-        let listItem = document.createElement('li');
-        list.appendChild(listItem);
-        listItem.textContent = `${items[i].name} had ${items[i].votes} votes, and was seen ${items[i].shown} times.`
+    // let list = document.getElementById('results');
+    // list.textContent=' ';
+    // for (let i = 0; i < Item.itemsAll.length; i++) {
+    //     let listItem = document.createElement('li');
+    //     list.appendChild(listItem);
+    //     listItem.textContent = `${Item.itemsAll[i].name} had ${Item.itemsAll[i].votes} votes, and was seen ${Item.itemsAll[i].shown} times.`
         
-    }
+    // }
+
+    showChart();
 }
  
+
+function showChart() {
+
+    const data = {
+      labels: nameArr,
+      datasets: [{
+        label: 'Votes',
+        data: votesArr,
+        backgroundColor: [
+          'rgba(255, 99, 132)',
+          'rgba(255, 159, 64 )',
+          'rgba(255, 205, 86)',
+          'rgba(75, 192, 192)',
+          'rgba(54, 162, 235)',
+          'rgba(153, 102, 255)',
+          'rgba(201, 203, 207)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      },
+      {
+        label: 'Shown',
+        data: shownArr,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)'
+        ],
+        borderColor: [
+          'rgb(255, 99, 132)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)'
+        ],
+        borderWidth: 1
+      }
+    
+    ]
+    };
+  
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    };
+  
+  
+    var myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
+  
+  }
