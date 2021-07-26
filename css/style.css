@@ -35,9 +35,12 @@ button {
     height: 50px;
     font-size: 1.5rem;
     font-weight: bold;
-    background-color: #F7EA00;
+    background-color: #f7eb00;
     border: 1px solid #dbc91c;
     border-radius: 5px;
+    margin: 50px auto;
+    display: block;
+}
 }
 li{
     background-color: rgb(137 219 219 / 22%);
