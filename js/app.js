@@ -1,5 +1,6 @@
 'use strict';
 
+let itemsDivElement = document.getElementById('items');
 let leftItemElement = document.getElementById('left-item');
 let middleItemElement = document.getElementById('middle-item');
 let rightItemElement = document.getElementById('right-item');
@@ -70,9 +71,9 @@ function renderItems(){
 
 renderItems();
 
-leftItemElement.addEventListener('click',itemClick);
-middleItemElement.addEventListener('click',itemClick);
-rightItemElement.addEventListener('click',itemClick);
+itemsDivElement.addEventListener('click',itemClick);
+// middleItemElement.addEventListener('click',itemClick);
+// rightItemElement.addEventListener('click',itemClick);
 
 
 function itemClick(event){
@@ -83,15 +84,20 @@ function itemClick(event){
 
         if ( event.target.id ==='left-item'){
             items[leftItemIndex].votes++;
+            renderItems();
         }
         else if ( event.target.id ==='middle-item'){
             items[middleItemIndex].votes++;
+            renderItems();
+        }
+        else if ( event.target.id ==='right-item'){
+            items[rightItemIndex].votes++;
+            renderItems();
         }
         else {
-            items[rightItemIndex].votes++;
+            alert('Please choose one of the three images.');
+            attemptsCounter--;
         }
-
-        renderItems();
     }
 
     else {
@@ -102,9 +108,9 @@ function itemClick(event){
         list.appendChild(resultButton);
         resultButton.textContent ='Results';
         resultButton.addEventListener('click', resultClick);
-        leftItemElement.removeEventListener('click',itemClick);
-        middleItemElement.removeEventListener('click',itemClick);
-        rightItemElement.removeEventListener('click',itemClick);
+        itemsDivElement.removeEventListener('click',itemClick);
+        // middleItemElement.removeEventListener('click',itemClick);
+        // rightItemElement.removeEventListener('click',itemClick);
 
     }
 }
