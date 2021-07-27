@@ -4,12 +4,14 @@ let itemsDivElement = document.getElementById("items");
 let leftItemElement = document.getElementById("left-item");
 let middleItemElement = document.getElementById("middle-item");
 let rightItemElement = document.getElementById("right-item");
-let attemptsNumber = 25;
+let attemptsNumber = 10;
 let attemptsCounter = 0;
 let randomArr = [];
 let nameArr = [];
 let shownArr = [];
 let votesArr = [];
+let storedVotes = [];
+let storedshown = [];
 let leftItemIndex;
 let middleItemIndex;
 let rightItemIndex;
@@ -52,7 +54,7 @@ function renderitems() {
   middleItemIndex = randomIndex();
   rightItemIndex = randomIndex();
 
-  console.log("Previous Array", randomArr);
+  // console.log("Previous Array", randomArr);
 
   while (
     randomArr.includes(leftItemIndex) ||
@@ -67,7 +69,7 @@ function renderitems() {
     rightItemIndex = randomIndex();
   }
 
-  console.log("new arr ", leftItemIndex, middleItemIndex, rightItemIndex);
+  // console.log("new arr ", leftItemIndex, middleItemIndex, rightItemIndex);
 
   leftItemElement.src = Item.itemsAll[leftItemIndex].src;
   middleItemElement.src = Item.itemsAll[middleItemIndex].src;
@@ -110,12 +112,33 @@ function itemClick(event) {
     resultButton.addEventListener("click", resultClick);
     itemsDivElement.removeEventListener("click", itemClick);
 
+    let newVotesArr = [];
+    let newShownArr = [];
+
     for (let i = 0; i < Item.itemsAll.length; i++) {
+      let totVotes;
+      let totshown;
+
+      if (storedVotes.length == 0 && storedshown.length == 0) {
+        totVotes = Item.itemsAll[i].votes;
+        totshown = Item.itemsAll[i].shown;
+      } else {
+        totVotes = Item.itemsAll[i].votes + storedVotes[i];
+        totshown = Item.itemsAll[i].shown + storedshown[i];
+      }
       nameArr.push(Item.itemsAll[i].name);
-      shownArr.push(Item.itemsAll[i].votes);
-      votesArr.push(Item.itemsAll[i].shown);
+      shownArr.push(totshown);
+      votesArr.push(totVotes);
+      newVotesArr.push(Item.itemsAll[i].votes);
+      newShownArr.push(Item.itemsAll[i].shown);
     }
-    console.log(nameArr, shownArr, votesArr);
+    console.log("New Votes", newVotesArr);
+    console.log("New Views", newShownArr);
+    console.log("Total Votes", votesArr);
+    console.log("Total Views", shownArr);
+
+    // console.log(nameArr, shownArr, votesArr);
+    storeData();
   }
 }
 
@@ -130,6 +153,27 @@ function resultClick() {
   // }
 
   showChart();
+}
+
+function storeData() {
+  for (let o = 0; o < Item.itemsAll.length; o++) {
+    let stringArr = JSON.stringify(Item.itemsAll[o]);
+    //console.log(stringArr);
+    localStorage.setItem(`Item ${o}`, stringArr);
+  }
+}
+
+function getData() {
+  for (let i = 0; i < Item.itemsAll.length; i++) {
+    let data = localStorage.getItem(`Item ${i}`);
+    // console.log(data);
+    let parsedArr = JSON.parse(data);
+    // console.log(parsedArr);
+    if (parsedArr !== null) {
+      storedVotes.push(parsedArr.votes);
+      storedshown.push(parsedArr.shown);
+    }
+  }
 }
 
 function showChart() {
@@ -199,3 +243,7 @@ function showChart() {
 
   var myChart = new Chart(document.getElementById("myChart"), config);
 }
+
+getData();
+console.log("Stored Votes", storedVotes);
+console.log("Stored Views", storedshown);
