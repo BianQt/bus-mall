@@ -143,14 +143,12 @@ function itemClick(event) {
 }
 
 function resultClick() {
-  // let list = document.getElementById('results');
-  // list.textContent=' ';
-  // for (let i = 0; i < Item.itemsAll.length; i++) {
-  //     let listItem = document.createElement('li');
-  //     list.appendChild(listItem);
-  //     listItem.textContent = `${Item.itemsAll[i].name} had ${Item.itemsAll[i].votes} votes, and was seen ${Item.itemsAll[i].shown} times.`
-
-  // }
+  let list = document.getElementById("results");
+  for (let i = 0; i < Item.itemsAll.length; i++) {
+    let listItem = document.createElement("li");
+    list.appendChild(listItem);
+    listItem.textContent = `${Item.itemsAll[i].name} had ${votesArr[i]} votes, and was seen ${shownArr[i]} times.`;
+  }
 
   showChart();
 }
